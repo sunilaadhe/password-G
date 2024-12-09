@@ -1,4 +1,4 @@
-import { useState , useCallback,useEffect } from 'react'
+import { useState , useCallback,useEffect,useRef } from 'react'
 import './App.css'
 
 function App() {
@@ -6,6 +6,7 @@ function App() {
   const [numberAllowed,setnumberAllowed] = useState(false);
   const [charAllowed,setcharAllowed] = useState(false)
   const [password, setpassword] = useState("")
+  const passwordRef = useRef(null)
   const passwordgenrator = useCallback(()=>{
    let  pass = ""
    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -21,7 +22,12 @@ function App() {
 
 },[ length,numberAllowed,setcharAllowed,setpassword])
 
+const copypasswordToClickboard = useCallback(()=>{
+  window.navigator.clipboard.writeText(password)
+},[password])
+
 useEffect(()=>{
+ 
   passwordgenrator()
 
 },[length,numberAllowed,charAllowed, passwordgenrator])
@@ -44,8 +50,10 @@ useEffect(()=>{
         className='outline-none w-full py-1 px-3'
         placeholder='password'
         readOnly
+        ref={passwordRef}
          />
          <button
+         onClick={copypasswordToClickboard}
          className='bg-blue-700 text-white-500 outline-none  shrink-0 ' 
          >copy</button>
       </div>
